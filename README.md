@@ -14,11 +14,11 @@ This application exposes three REST API's, all which can be found in the generat
 
 For reference however:
 
-Create: http://localhost:9996/v1/tickets/create?numberOfLines=6
+Create (POST): http://localhost:9996/v1/tickets/create?numberOfLines=6
 
-Update: http://localhost:9996/v1/tickets/update/ticket_1?numberOfLines=6
+Update (PUT): http://localhost:9996/v1/tickets/update/ticket_1?numberOfLines=6
 
-Check Status: http://localhost:9996/v1/tickets/check/ticket_1
+Check Status (PUT): http://localhost:9996/v1/tickets/check/ticket_1
 
 
 The application can be ran using "mvn spring-boot:run"
