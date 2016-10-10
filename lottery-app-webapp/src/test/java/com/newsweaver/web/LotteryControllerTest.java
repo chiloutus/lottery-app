@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -162,7 +164,8 @@ public class LotteryControllerTest {
 
     //Ticket DTO for tests
     public TicketDTO getTicketDTO() {
-        List<Line> lines = Collections.singletonList(new Line(new int[]{0,2,1}));
+        List<Integer> arrayList = Arrays.asList(1, 2, 3);
+        List<Line> lines = Collections.singletonList(new Line(arrayList));
         return new TicketDTO(lines);
     }
 

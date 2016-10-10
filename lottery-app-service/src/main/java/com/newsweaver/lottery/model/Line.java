@@ -1,6 +1,7 @@
 package com.newsweaver.lottery.model;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by gary on 08/10/2016.
@@ -12,13 +13,13 @@ public class Line {
         //Default constructor for OM
     }
 
-    int[] numbers;
+    List<Integer> numbers;
 
-    public Line(int[] numbers) {
+    public Line(List<Integer> numbers) {
         this.numbers = numbers;
     }
 
-    public int[] getNumbers() {
+    public List<Integer> getNumbers() {
         return numbers;
     }
 
@@ -31,12 +32,12 @@ public class Line {
 
         Line line = (Line) o;
 
-        return Arrays.equals(numbers, line.numbers);
+        return !(numbers != null ? !numbers.equals(line.numbers) : line.numbers != null);
 
     }
 
     @Override
     public int hashCode() {
-        return numbers != null ? Arrays.hashCode(numbers) : 0;
+        return numbers != null ? numbers.hashCode() : 0;
     }
 }
