@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 
 /**
@@ -47,7 +46,8 @@ public class LotteryController {
     //This needs to be a PUT as it actually updates the state of a ticket
     @RequestMapping(path = "/tickets/check/{ticketId}", method = RequestMethod.PUT,
             produces = "application/json; charset=UTF-8")
-    @ApiOperation(value = "Checks the status of the ticket", notes = "")
+    @ApiOperation(value = "Checks the status of the ticket", notes = "While this API may seem like a GET, it modifies the" +
+            "state of the data, so therefore it needs to be a PUT request")
     public StatusDTO checkTicket(@PathVariable(value = "ticketId") String ticketId) {
         LOGGER.info("Request to update a ticket received, ticketId: ", ticketId);
         return ticketService.checkTicket(ticketId);

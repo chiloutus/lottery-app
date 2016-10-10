@@ -16,4 +16,10 @@ public class ServiceConstants {
     public static final int NONE_MATCH_FIRST = 1;
 
     public static final int DEFAULT_CASE = 0;
+
+    private ServiceConstants() {
+        //Private constructor to hide default
+    }
+
+
 }

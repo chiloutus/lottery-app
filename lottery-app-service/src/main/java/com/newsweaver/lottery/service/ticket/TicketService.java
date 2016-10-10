@@ -3,8 +3,6 @@ package com.newsweaver.lottery.service.ticket;
 import com.newsweaver.lottery.dto.StatusDTO;
 import com.newsweaver.lottery.dto.TicketDTO;
 
-import java.util.List;
-
 /**
  * Created by gary on 07/10/2016.
  */

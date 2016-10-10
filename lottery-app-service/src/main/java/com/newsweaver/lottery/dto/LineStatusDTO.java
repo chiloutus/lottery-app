@@ -37,12 +37,15 @@ public class LineStatusDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         LineStatusDTO that = (LineStatusDTO) o;
 
-        if (result != that.result) return false;
+        if (result != that.result)
+            return false;
         return line != null ? line.equals(that.line) : that.line == null;
 
     }
