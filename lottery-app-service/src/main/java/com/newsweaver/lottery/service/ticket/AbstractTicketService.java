@@ -85,14 +85,16 @@ public abstract class AbstractTicketService implements TicketService {
     private StatusDTO evaluateTicketStatus(Ticket existingTicket) {
         List<LineStatusDTO> statuses = new ArrayList<>();
         for(Line line : existingTicket.getLines()) {
-            int status = 0;
-            int[] numbers = line.getNumbers();
-            if(numbers[0] + numbers[1] + numbers[2] == 2) {
-                status = 10;
-            } else if(numbers[0] == numbers[1] && numbers[0] == numbers[2]) {
-                status = 5;
-            } else if(numbers[0] != numbers[1] && numbers[0] != numbers[2]) {
-                status = 1;
+            List<Integer> numbers = line.getNumbers();
+            //Get the amount of times the number in the first index appears
+            int occurrences = Collections.frequency(numbers, numbers.get(0));
+            int status = ServiceConstants.DEFAULT_CASE;
+            if( numbers.stream().mapToInt(Integer::intValue).sum() == 2) {
+                status = ServiceConstants.SUM_TWO;
+            } else if(occurrences == 3) {
+                status = ServiceConstants.ALL_MATCH;
+            } else if(occurrences == 1) {
+                status = ServiceConstants.NONE_MATCH_FIRST;
             }
             statuses.add(new LineStatusDTO(line, status));
         }
@@ -116,9 +118,9 @@ public abstract class AbstractTicketService implements TicketService {
     private List<Line> generateLines(int numberOfLines) {
         List<Line> lines = new ArrayList<>();
         for(int i = 0; i < numberOfLines; i++) {
-            int[] lineNumbers = new int[ServiceConstants.LINE_LENGTH];
-            for(int j = 0; j < lineNumbers.length; j++) {
-                lineNumbers[j] = ThreadLocalRandom.current().nextInt(0,3);
+            List<Integer> lineNumbers = new ArrayList<>();
+            for(int j = 0; j < ServiceConstants.LINE_LENGTH; j++) {
+                lineNumbers.add(ThreadLocalRandom.current().nextInt(0, 3));
             }
             lines.add(new Line(lineNumbers));
         }
