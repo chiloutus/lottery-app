@@ -31,8 +31,6 @@ public class TicketServiceImpl extends AbstractTicketService {
     @Value("${line.length}")
     private Integer lineLength;
 
-
-
     @Resource(name = "ticketRepository")
     TicketRepository ticketRepository;
 
@@ -49,26 +47,32 @@ public class TicketServiceImpl extends AbstractTicketService {
         return entityConverter;
     }
 
+    @Override
     public int getAllMatch() {
         return allMatchCase;
     }
 
+    @Override
     public int getNoneMatchFirst() {
         return noneMatchFirst;
     }
 
+    @Override
     public int getListSumResult() {
         return listSumResult;
     }
 
+    @Override
     public int getListSumValue() {
         return listSumValue;
     }
 
+    @Override
     public int getDefaultCase() {
         return defaultCase;
     }
 
+    @Override
     public int getLineLength() {
         return lineLength;
     }

@@ -1,6 +1,5 @@
 package com.newsweaver.lottery.service.ticket;
 
-import com.newsweaver.lottery.ServiceConstants;
 import com.newsweaver.lottery.dto.LineStatusDTO;
 import com.newsweaver.lottery.dto.StatusDTO;
 import com.newsweaver.lottery.dto.TicketDTO;
@@ -23,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by gary on 07/10/2016.
  */
-public abstract class AbstractTicketService implements TicketService {
+abstract class AbstractTicketService implements TicketService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTicketService.class);
 
