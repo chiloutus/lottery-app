@@ -4,6 +4,7 @@ import com.newsweaver.lottery.ServiceConstants;
 import com.newsweaver.lottery.dto.LineStatusDTO;
 import com.newsweaver.lottery.dto.StatusDTO;
 import com.newsweaver.lottery.dto.TicketDTO;
+import com.newsweaver.lottery.enums.LineResult;
 import com.newsweaver.lottery.exception.LotteryAppException;
 import com.newsweaver.lottery.exception.entity.InvalidInputException;
 import com.newsweaver.lottery.exception.entity.TicketAlreadyCheckedException;
@@ -38,7 +39,7 @@ public abstract class AbstractTicketService implements TicketService {
         //Create a ticket with the number of lines specified
         Ticket created = new Ticket(generateLines(numberOfLines));
 
-        LOGGER.error("Created new ticket with ID", created.getId());
+        LOGGER.info("Created new ticket with ID", created.getId());
 
         //persist the ticket
         created = getTicketRepository().createTicket(created);
@@ -85,21 +86,40 @@ public abstract class AbstractTicketService implements TicketService {
     private StatusDTO evaluateTicketStatus(Ticket existingTicket) {
         List<LineStatusDTO> statuses = new ArrayList<>();
         for(Line line : existingTicket.getLines()) {
-            List<Integer> numbers = line.getNumbers();
-            //Get the amount of times the number in the first index appears
-            int occurrences = Collections.frequency(numbers, numbers.get(0));
-            int status = ServiceConstants.DEFAULT_CASE;
-            if( numbers.stream().mapToInt(Integer::intValue).sum() == 2) {
-                status = ServiceConstants.SUM_TWO;
-            } else if(occurrences == 3) {
-                status = ServiceConstants.ALL_MATCH;
-            } else if(occurrences == 1) {
-                status = ServiceConstants.NONE_MATCH_FIRST;
-            }
+            int status;
+                switch (evaluateLineResult(line)) {
+                    case ALL_MATCH:
+                        status = getAllMatch();
+                        break;
+                    case SUM_LIST:
+                        status = getListSumResult();
+                        break;
+                    case NONE_MATCH_FIRST:
+                        status = getNoneMatchFirst();
+                        break;
+                    default:
+                        status = getDefaultCase();
+                        break;
+                }
             statuses.add(new LineStatusDTO(line, status));
         }
         statuses = sortStatuses(statuses);
         return new StatusDTO(statuses, existingTicket.getId());
+    }
+
+    private LineResult evaluateLineResult(Line line) {
+        List<Integer> numbers = line.getNumbers();
+        //Get the amount of times the number in the first index appears
+        int occurrences = Collections.frequency(numbers, numbers.get(0));
+        if( numbers.stream().mapToInt(Integer::intValue).sum() == getListSumValue()) {
+            return LineResult.SUM_LIST;
+        } else if(occurrences == numbers.size()) {
+            return LineResult.ALL_MATCH;
+        } else if(occurrences == 1) {
+            return LineResult.NONE_MATCH_FIRST;
+        }
+        return LineResult.DEFAULT;
+
     }
     //Custom sorting logic
     private List<LineStatusDTO> sortStatuses(List<LineStatusDTO> statuses) {
@@ -119,7 +139,7 @@ public abstract class AbstractTicketService implements TicketService {
         List<Line> lines = new ArrayList<>();
         for(int i = 0; i < numberOfLines; i++) {
             List<Integer> lineNumbers = new ArrayList<>();
-            for(int j = 0; j < ServiceConstants.LINE_LENGTH; j++) {
+            for(int j = 0; j < getLineLength(); j++) {
                 lineNumbers.add(ThreadLocalRandom.current().nextInt(0, 3));
             }
             lines.add(new Line(lineNumbers));
@@ -130,4 +150,17 @@ public abstract class AbstractTicketService implements TicketService {
     abstract TicketRepository getTicketRepository();
 
     abstract EntityConverter getEntityConverter();
+
+    public abstract int getAllMatch();
+
+    public abstract int getNoneMatchFirst();
+
+    public abstract int getListSumResult();
+
+    public abstract int getListSumValue();
+
+    public abstract int getDefaultCase();
+
+    public abstract int getLineLength();
+
 }

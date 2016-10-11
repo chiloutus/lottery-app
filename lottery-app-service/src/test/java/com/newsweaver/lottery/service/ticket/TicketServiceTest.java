@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,19 +32,38 @@ import static org.mockito.Matchers.any;
 @ContextConfiguration(classes = {ServiceConfiguration.class})
 public class TicketServiceTest {
 
+    @Resource
     @InjectMocks
     private TicketServiceImpl ticketService;
 
     @Resource
     private EntityConverter entityConverter;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${all.match.case}")
+    private Integer allMatchCase;
+
+    @Value("${none.match.first}")
+    private Integer noneMatchFirst;
+
+    @Value("${sum.of.list.result}")
+    private Integer listSumResult;
+
+    @Value("${sum.of.list.value}")
+    private Integer listSumValue;
+
+    @Value("${default.case}")
+    private Integer defaultCase;
+
+    @Value("${line.length}")
+    private Integer lineLength;
 
     @Mock
     private EntityConverter mockConverter;
 
     @Mock
     private TicketRepository ticketRepository;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String TICKET_ID = "ticket_1";
 
@@ -106,12 +126,12 @@ public class TicketServiceTest {
 
         Assert.assertEquals(ticketStatus.getTicketId(), TICKET_ID);
         //These should be ordered in in terms of result, as well as correct
-        Assert.assertEquals(ticketStatus.getStatuses().get(0).getResult(), 0);
-        Assert.assertEquals(ticketStatus.getStatuses().get(1).getResult(), 1);
-        Assert.assertEquals(ticketStatus.getStatuses().get(2).getResult(), 5);
-        Assert.assertEquals(ticketStatus.getStatuses().get(3).getResult(), 10);
+        Assert.assertEquals(ticketStatus.getStatuses().get(0).getResult(), defaultCase.intValue());
+        Assert.assertEquals(ticketStatus.getStatuses().get(1).getResult(), noneMatchFirst.intValue());
+        Assert.assertEquals(ticketStatus.getStatuses().get(2).getResult(), allMatchCase.intValue());
+        Assert.assertEquals(ticketStatus.getStatuses().get(3).getResult(), listSumResult.intValue());
     }
-
+    //Json only valid for the default config. Ideally this would be generated based on the current properties
     private String getInputTicketString() {
         return " {\n" +
                 "    \"id\": \"ticket_1\",\n" +

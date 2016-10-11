@@ -1,6 +1,7 @@
 package com.newsweaver.lottery;
 
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,10 @@ public class ServiceConfiguration {
     @Profile("default")
     @PropertySource("classpath:service.properties")
     static class Defaults {}
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
 }
